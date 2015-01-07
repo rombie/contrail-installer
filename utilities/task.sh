@@ -210,6 +210,7 @@ function start_contrail()
                 :
             else       
                 run_command build
+                exit
                 _status=$?
                 _RETURN_STATUS=$(status_return $_status $BUILD_ERR_CODE)
                 running_status=$(get_running_status)   
@@ -222,6 +223,7 @@ function start_contrail()
         
         else
             run_command build
+            exit
             _status=$?
             _RETURN_STATUS=$(status_return $_status $BUILD_ERR_CODE)
         
