@@ -3,11 +3,11 @@
 
 # Contrail NFV
 # ------------
-# if [[ $EUID -eq 0 ]]; then
-#     echo "You are running this script as root."
-#     echo "Cut it out."
-#     exit 1
-# fi
+if [[ $EUID -eq 0 ]]; then
+    echo "You are running this script as root."
+    echo "Cut it out."
+    exit 1
+fi
 if [[ "$CONTRAIL_DEFAULT_INSTALL" != "True" ]]; then
     ENABLED_SERVICES=redis,cass,zk,ifmap,disco,apiSrv,schema,svc-mon,control,collector,analytics-api,query-engine,agent,redis-w,ui-jobs,ui-webs
 else
@@ -222,7 +222,6 @@ function setup_logging() {
 setup_logging
 
 function download_redis {
-    return
     echo "Downloading dependencies"
     if is_ubuntu; then
         if ! which redis-server > /dev/null 2>&1 ; then
@@ -248,7 +247,6 @@ function download_redis {
 }
 
 function download_node_for_npm {
-    return
     # install node which brings npm that's used in fetch_packages.py
     if ! which node > /dev/null 2>&1 || ! which npm > /dev/null 2>&1 ; then
         # download nodejs if building from source or centos
@@ -267,15 +265,13 @@ function download_node_for_npm {
 }
 
 function download_dependencies {
-    return
     echo "Downloading dependencies"
     if is_ubuntu; then
         apt_get update
         apt_get install python-setuptools
         apt_get install python-novaclient
         apt_get install curl
-#       apt_get install chkconfig
-        apt_get install screen
+        apt_get install chkconfig screen
         apt_get install default-jdk javahelper
         apt_get install libcommons-codec-java libhttpcore-java liblog4j1.2-java
         sudo -E add-apt-repository -y cloud-archive:havana
@@ -328,7 +324,6 @@ function download_dependencies {
 }
 
 function download_python_dependencies {
-    return
     echo "Downloading python dependencies"
     # api server requirements
     # sudo pip install gevent==0.13.8 geventhttpclient==1.0a thrift==0.8.0
@@ -418,7 +413,6 @@ function repo_initialize_backup {
 }
 
 function download_cassandra {
-    return
     echo "Downloading cassanadra"
     if ! which cassandra > /dev/null 2>&1 ; then
         if is_ubuntu; then
@@ -465,7 +459,6 @@ function download_cassandra {
 }
 
 function download_zookeeper {
-    return
     echo "Downloading zookeeper"
     if [[ "$CONTRAIL_DEFAULT_INSTALL" != "True" ]]; then
         contrail_cwd=$(pwd)
@@ -485,7 +478,6 @@ function download_zookeeper {
 }
 
 function download_ncclient {
-    return
     # ncclient
     echo "Downloading ncclient"
     if ! python -c 'import ncclient' >/dev/null 2>&1; then
@@ -541,12 +533,12 @@ function build_contrail() {
     cd $CONTRAIL_SRC
     if [[ "$CONTRAIL_DEFAULT_INSTALL" != "True" ]]; then    
         if [[ $(read_stage) == "python-dependencies" ]]; then
-            #repo_initialize
+            repo_initialize
             change_stage "python-dependencies" "repo-init"
         fi
    
         if [[ $(read_stage) == "repo-init" ]]; then
-            #repo sync
+            repo sync
             [[ $? -ne 0 ]] && echo "repo sync failed" && exit
             change_stage "repo-init" "repo-sync"
         fi
@@ -561,9 +553,9 @@ function build_contrail() {
         cd $CONTRAIL_SRC
         if [ "$INSTALL_PROFILE" = "ALL" ]; then
             if [[ $(read_stage) == "fetch-packages" ]]; then
-                sudo scons --opt=production
-                ret_val=$?
-                [[ $ret_val -ne 0 ]] && exit
+#               sudo scons --opt=production
+#               ret_val=$?
+#               [[ $ret_val -ne 0 ]] && exit
                 change_stage "fetch-packages" "Build"
             fi
         elif [ "$INSTALL_PROFILE" = "COMPUTE" ]; then
