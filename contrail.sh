@@ -553,9 +553,9 @@ function build_contrail() {
         cd $CONTRAIL_SRC
         if [ "$INSTALL_PROFILE" = "ALL" ]; then
             if [[ $(read_stage) == "fetch-packages" ]]; then
-#               sudo scons --opt=production
-#               ret_val=$?
-#               [[ $ret_val -ne 0 ]] && exit
+                sudo scons --opt=production
+                ret_val=$?
+                [[ $ret_val -ne 0 ]] && exit
                 change_stage "fetch-packages" "Build"
             fi
         elif [ "$INSTALL_PROFILE" = "COMPUTE" ]; then
