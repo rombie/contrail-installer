@@ -272,7 +272,7 @@ function download_dependencies {
         apt_get install python-novaclient
         apt_get install curl
         apt_get install screen
-        apt_get install chkconfig || true
+#       apt_get install chkconfig
         apt_get install default-jdk javahelper
         apt_get install libcommons-codec-java libhttpcore-java liblog4j1.2-java
         sudo -E add-apt-repository -y cloud-archive:havana
@@ -534,12 +534,12 @@ function build_contrail() {
     cd $CONTRAIL_SRC
     if [[ "$CONTRAIL_DEFAULT_INSTALL" != "True" ]]; then    
         if [[ $(read_stage) == "python-dependencies" ]]; then
-            repo_initialize
+            #repo_initialize
             change_stage "python-dependencies" "repo-init"
         fi
    
         if [[ $(read_stage) == "repo-init" ]]; then
-            repo sync
+            #repo sync
             [[ $? -ne 0 ]] && echo "repo sync failed" && exit
             change_stage "repo-init" "repo-sync"
         fi
